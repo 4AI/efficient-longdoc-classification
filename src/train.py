@@ -314,6 +314,19 @@ if __name__ == "__main__":
         label_type = 'binary_class'
         text_set, label_set, num_labels = dataloader.prepare_hyperpartisan_data()
 
+    elif args.data.lower() == 'agnews':
+        label_type = 'multi_class'
+        text_set, label_set, num_labels = dataloader.prepare_agnews()
+        '''
+        # test code
+        for split in ['train', 'dev', 'test']:
+            text_set[split] = text_set[split][:100]
+            label_set[split] = label_set[split][:100]
+        '''
+    elif args.data.lower() == 'arxiv':
+        label_type = 'multi_class'
+        text_set, label_set, num_labels = dataloader.prepare_arxiv()
+
     else:
         raise Exception("Data not found: {}".format(args.data))
 
