@@ -13,6 +13,19 @@ pip install -r requirements.txt
 python -c "import torch; print(torch.cuda.is_available())"
 ```
 
+# 2. Download Dataset
+
+1) download agnews
+```
+python download_agnews.py
+```
+data will save to `data/agnews`
+
+2) download arxiv
+```
+python download_arxiv.py
+```
+data will save to `data/arxiv-clf`
 
 # 2. Trains Baseline
 
