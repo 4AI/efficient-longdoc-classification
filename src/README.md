@@ -27,7 +27,7 @@ python download_arxiv.py
 ```
 data will save to `data/arxiv-clf`
 
-# 2. Trains Baseline
+# 2. Train Baseline
 
 TODO:
 
