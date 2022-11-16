@@ -276,7 +276,7 @@ def prepare_agnews(data_dir='data/agnews'):
     return text_set, vectorized_labels, num_labels
 
 
-def prepare_arxiv(data_dir='data/arxiv-clf'):
+def prepare_arxiv(data_dir='data/arxiv-clf', max_length=4096):
     train_path = os.path.join(data_dir, 'train.jsonl')
     dev_path = os.path.join(data_dir, 'dev.jsonl')
     test_path = os.path.join(data_dir, 'test.jsonl')
@@ -292,7 +292,7 @@ def prepare_arxiv(data_dir='data/arxiv-clf'):
         with open(data_path, 'r') as reader:
             for line in reader:
                 obj = json.loads(line)
-                text_set[split].append(obj['text'])
+                text_set[split].append(' '.join(obj['text'].split()[:max_length]))
                 label_set[split].append(obj['label'])
     
     if not text_set['dev']:
