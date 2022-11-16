@@ -240,6 +240,77 @@ def prepare_book_summaries(pairs, book_path='data/booksummaries/booksummaries.tx
     vectorized_labels, num_labels = vectorize_labels(label_set)
     return text_set, vectorized_labels, num_labels
 
+
+def prepare_agnews(data_dir='data/agnews'):
+    train_path = os.path.join(data_dir, 'train.jsonl')
+    dev_path = os.path.join(data_dir, 'dev.jsonl')
+    test_path = os.path.join(data_dir, 'test.jsonl')
+
+    text_set = {'train': [], 'dev': [], 'test': []}
+    label_set = {'train': [], 'dev': [], 'test': []}
+
+    for split in ['train', 'dev', 'test']:
+        data_path = os.path.join(data_dir, f'{split}.jsonl')
+        if not os.path.exists(data_path):
+            print(f'{data_path} does not exist, skiping...')
+            continue
+        with open(data_path, 'r') as reader:
+            for line in reader:
+                obj = json.loads(line)
+                text_set[split].append(obj['text'])
+                label_set[split].append(obj['label'])
+
+    # if not text_set['dev']:
+    text_set['dev'] = text_set['test'][:]
+    label_set['dev'] = label_set['test'][:]
+
+    enc = preprocessing.LabelEncoder()
+    enc.fit(label_set['train'])
+    num_labels = len(enc.classes_)
+
+    # vectorize labels as zeros and ones
+    vectorized_labels = {}
+    for split in ['train', 'dev', 'test']:
+        vectorized_labels[split] = enc.transform(label_set[split])
+
+    return text_set, vectorized_labels, num_labels
+
+
+def prepare_arxiv(data_dir='data/arxiv-clf'):
+    train_path = os.path.join(data_dir, 'train.jsonl')
+    dev_path = os.path.join(data_dir, 'dev.jsonl')
+    test_path = os.path.join(data_dir, 'test.jsonl')
+
+    text_set = {'train': [], 'dev': [], 'test': []}
+    label_set = {'train': [], 'dev': [], 'test': []}
+
+    for split in ['train', 'dev', 'test']:
+        data_path = os.path.join(data_dir, f'{split}.jsonl')
+        if not os.path.exists(data_path):
+            print(f'{data_path} does not exist, skiping...')
+            continue
+        with open(data_path, 'r') as reader:
+            for line in reader:
+                obj = json.loads(line)
+                text_set[split].append(obj['text'])
+                label_set[split].append(obj['label'])
+    
+    if not text_set['dev']:
+        text_set['dev'] = text_set['test'][:]
+        label_set['dev'] = label_set['test'][:]
+
+    enc = preprocessing.LabelEncoder()
+    enc.fit(label_set['train'])
+    num_labels = len(enc.classes_)
+
+    # vectorize labels as zeros and ones
+    vectorized_labels = {}
+    for split in ['train', 'dev', 'test']:
+        vectorized_labels[split] = enc.transform(label_set[split])
+
+    return text_set, vectorized_labels, num_labels
+
+
 def vectorize_labels(all_labels):
     """
     Combine labels across all data and reformat the labels e.g. [[1, 2], ..., [123, 343, 4] ] --> [[0, 1, 1, ... 0], ...]
